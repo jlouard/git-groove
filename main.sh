@@ -4,18 +4,18 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Path to folders
-ROOT_FOLDER="$SCRIPT_DIR/"
+export ROOT_FOLDER="$SCRIPT_DIR/"
 UTILS_FOLDER="${ROOT_FOLDER}utils/"
 SOUNDS_FOLDER="${ROOT_FOLDER}sounds/"
 ANIMATIONS_FOLDER="${ROOT_FOLDER}animations/"
-DAB_DETECTION_FOLDER="${ROOT_FOLDER}dab_detection/"
+export DAB_DETECTION_FOLDER="${ROOT_FOLDER}dab_detection/"
 IMAGES_FOLDER="${ROOT_FOLDER}dab_detection/"
 
 # Source utility 
-source "$UTILS_FOLDER/play_sound.sh"
-source "$UTILS_FOLDER/display_ascii.sh"
-source "$UTILS_FOLDER/display_animation.sh"
-source "$UTILS_FOLDER/detect_dab.sh"
+source "${UTILS_FOLDER}play_sound.sh"
+source "${UTILS_FOLDER}display_ascii.sh"
+source "${UTILS_FOLDER}display_animation.sh"
+source "${UTILS_FOLDER}detect_dab.sh"
 
 # Path to sound files
 PULL_SOUND="${SOUNDS_FOLDER}poule.mp3"
