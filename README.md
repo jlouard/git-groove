@@ -14,6 +14,7 @@ Prerequisites
 - macOS
 - Git
 - Terminal
+- Python3 (only for dab detection)
 
 ## Installation
 
@@ -80,4 +81,7 @@ We welcome contributions!
 
 ## Acknowledgments
 Thanks to the contributors and the open-source community for their support.
+
+Thanks to MuhammadTayyab777 for his awesome contribution on dab detection. See his code here : https://github.com/MuhammadTayyab777/Posedetector_python_mediapipe_solution.
+
 Enjoy your new groovy git experience! If you have any issues or suggestions, please open an issue or submit a pull request.
