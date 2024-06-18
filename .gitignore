@@ -1,0 +1,15 @@
+# Ignore OS generated files
+.DS_Store
+
+# Ignore Python specific files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+*.env
+*.venv
+pip-log.txt
+pip-delete-this-directory.txt
