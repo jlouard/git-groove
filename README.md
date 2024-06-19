@@ -15,8 +15,14 @@ Prerequisites
 - Git
 - Terminal
 - Python3 (only for dab detection)
+- tkinter
 
 ## Installation
+
+0. If you don't have tkinter
+```
+brew install python-tk
+```
 
 1. Clone the Repository
 ```
