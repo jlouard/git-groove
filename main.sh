@@ -33,7 +33,7 @@ case "$1 $2" in
         ;;
     "push dab"*)
         detect_dab
-        git "$@"
+        git push
         ;;
     "poule"*)
         git pull
