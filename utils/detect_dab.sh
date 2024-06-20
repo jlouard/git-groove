@@ -12,7 +12,18 @@ detect_dab() {
     fi
 
     source "$VENV_DIR/bin/activate"
-    pip install -r "$REQUIREMENTS_FILE"
+
+    requirements_installed() {
+        pip freeze | grep -F -xf "$REQUIREMENTS_FILE" > /dev/null
+    }
+
+    if requirements_installed; then
+        echo "All requirements are already installed."
+    else
+        echo "Installing requirements..."
+        pip install -r "$REQUIREMENTS_FILE"
+    fi
+
     python3 "$SCRIPT"
     deactivate
 }

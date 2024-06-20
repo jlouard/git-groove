@@ -2,7 +2,7 @@ import cv2
 import tkinter as tk
 from tkinter import *
 import mediapipe as mp
-from PIL import Image,ImageTk
+from PIL import Image, ImageTk
 import threading
 from tkinter import filedialog
 from utils.angle_between_lines import angle_between_lines
@@ -66,7 +66,6 @@ class DabMoveDetection:
                 angle1 = abs(angle_between_lines(left_shoulder.x, left_shoulder.y, left_elbow.x, left_elbow.y, left_wrist.x, left_wrist.y))
             else:
                 angle1=0
-            print("Left Arm(Shoulder, Wrist) :",angle1)
             
             # angle2 between left parts points 23,11,13
             left_hip = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.LEFT_HIP]
@@ -75,7 +74,6 @@ class DabMoveDetection:
                 angle2 = abs(angle_between_lines(left_hip.x, left_hip.y,left_shoulder.x, left_shoulder.y, left_elbow.x, left_elbow.y))
             else:
                 angle2=0
-            print("Left Shoulder-Hip:",angle2)
 
             # angle3 between left parts points 24,12,14
             right_hip = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.RIGHT_HIP]
@@ -85,7 +83,6 @@ class DabMoveDetection:
                 angle3 = abs(angle_between_lines(right_hip.x, right_hip.y, right_shoulder.x, right_shoulder.y, right_elbow.x, right_elbow.y))
             else:
                 angle3=0
-            print("Right Shoulder-Hip:",angle3)
 
             # angle4 between left parts points 24,12,14
             right_wrist = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.RIGHT_WRIST]
@@ -94,27 +91,22 @@ class DabMoveDetection:
                 angle4 = abs(angle_between_lines(right_shoulder.x, right_shoulder.y, right_elbow.x, right_elbow.y, right_wrist.x, right_wrist.y))
             else:
                 angle4=0
-            print("Right Shoulder-Wrist:",angle4)
             if (angle1 > 0 and angle1 <= 45):
                 self.count1 = True
             else:
                 self.count1 = False
-            print("Count 1 :",self.count1)
             if (60< angle2 < 155):
                 self.count2 = True
             else:
                 self.count2 = False
-            print("Count 2 :",self.count2)
-            if (angle3 > 75 and angle3<145):
+            if (angle3 > 75 and angle3 < 145):
                 self.count3 = True
             else:
                 self.count3 = False
-            print("Count 3 :",self.count3)
-            if (angle4 > 0 and angle4  < 30):
+            if (angle4 > 0 and angle4 < 30):
                 self.count4 = True
             else:
                 self.count4 = False
-            print("Count 4 :",self.count4)
 
             if ((self.c1==False or self.c2==False  or self.c4==False or self.c3==False) ):    #  
                 if(self.count1==True and self.count2==True and self.count3==True and self.count4==True):
@@ -123,8 +115,8 @@ class DabMoveDetection:
             
             if self.Dabmove >= 1:
                 self.running = False
-                print("===================== Success DAB detected! =====================")
                 self.master.quit()
+                print("===================== Success DAB detected! =====================")
                     
             if(self.count1==True and self.count2==True and self.count3==True and self.count4==True):
                 
@@ -132,7 +124,6 @@ class DabMoveDetection:
             else:
                 
                 self.angle_correction.configure(text="Incorrecct DabMove",fg="red" )
-            # print("DAB detected : ",self.Dabmove)
             self.c1=self.count1
             self.c2=self.count2
             self.c3=self.count3
@@ -161,7 +152,6 @@ class DabMoveDetection:
                 cv2.circle(annotated_image, (int(Bally_Button[0] * annotated_image.shape[1]), int(Bally_Button[1] * annotated_image.shape[0])), 5, (255, 0, 0), -1)
 
             # # Show the annotated image
-            # cv2.imshow('MediaPipe Holistic', annotated_image)
             # Resize the image to match the size of the canvas
             resized_image = cv2.resize(annotated_image, (640, 480))
             self.leg_lift_image = ImageTk.PhotoImage(Image.fromarray(resized_image))
