@@ -26,7 +26,7 @@ brew install python-tk
 
 1. Clone the Repository
 ```
-git clone https://github.com/jlouard/git-groove.git
+git clone git@github.com:jlouard/git-groove.git
 cd git-groove
 ```
 
