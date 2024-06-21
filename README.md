@@ -26,13 +26,13 @@ brew install python-tk
 
 1. Clone the Repository
 ```
-git clone https://github.com/yourusername/git-groove.git
+git clone https://github.com/jlouard/git-groove.git
 cd git-groove
 ```
 
 2. Make the Script Executable
 ```
-chmod +x git-sound.sh
+chmod +x main.sh
 ```
 
 3. Add an Alias to Your Shell Configuration
