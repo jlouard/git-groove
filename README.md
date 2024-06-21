@@ -38,9 +38,9 @@ chmod +x main.sh
 3. Add an Alias to Your Shell Configuration
 Add the following line to your .bashrc or .zshrc file to use the script for git commands:
 ```
-alias git='/path/to/your/git-sound.sh'
+alias git='/path/to/your/main.sh'
 ```
-Replace /path/to/your/git-sound.sh with the actual path to your git-sound.sh script.
+Replace /path/to/your/main.sh with the actual path to your main.sh script.
 
 4. Reload Your Shell Configuration
 ```
