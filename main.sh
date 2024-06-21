@@ -50,7 +50,7 @@ case "$1 $2" in
         display_animation "$ANIMATIONS_FOLDER/moustache" $REPEAT_COUNT $STASH_FRAME_DELAY
         git stash
         ;;
-    "pooulet"*)
+    "poulet"*)
         display_animation "$ANIMATIONS_FOLDER/poulet" $REPEAT_COUNT $PULL_FRAME_DELAY
         ;;
     *)
