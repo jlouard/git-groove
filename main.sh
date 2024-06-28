@@ -20,6 +20,7 @@ source "${UTILS_FOLDER}detect_dab.sh"
 # Path to sound files
 PULL_SOUND="${SOUNDS_FOLDER}poule.mp3"
 POP_SOUND="${SOUNDS_FOLDER}pop.mp3"
+FIXUP_SOUND="${SOUNDS_FOLDER}fixup.mp3"
 
 # Animation variables
 PULL_FRAME_DELAY=0.3  # Delay between frames in seconds
@@ -52,6 +53,10 @@ case "$1 $2" in
         ;;
     "poulet"*)
         display_animation "$ANIMATIONS_FOLDER/poulet" $REPEAT_COUNT $PULL_FRAME_DELAY
+        ;;
+    "autofixup"*)
+        git "$@"
+        play_sound "$FIXUP_SOUND"
         ;;
     *)
         git "$@"
