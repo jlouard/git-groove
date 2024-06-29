@@ -8,7 +8,7 @@ from tkinter import filedialog
 from utils.angle_between_lines import angle_between_lines
 
 class DabMoveDetection:
-    def __init__(self, master, video_path, min_detection_confidence=0.5, min_tracking_confidence=0.5 ):
+    def __init__(self, master, video_path, min_detection_confidence=0.5, min_tracking_confidence=0.5):
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_holistic = mp.solutions.holistic
         
@@ -51,7 +51,12 @@ class DabMoveDetection:
         self.running = False
         self.master.quit()
 
-    def detect_pose(self,results):
+    def is_dab_correct(self):
+        if self.c1 and self.c2  and self.c4 and self.c3:
+            return False
+        return self.count1 and self.count2 and self.count3 and self.count4
+
+    def detect_pose(self, results):
         if results.pose_landmarks:
         
         
@@ -60,7 +65,7 @@ class DabMoveDetection:
             right_shoulder = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.RIGHT_SHOULDER]
 
             
-            # angle1 between left parts points 11,13,15
+            # angle1 between left parts points 11, 13, 15
             # left_shoulder = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.LEFT_SHOULDER]
             left_elbow = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.LEFT_ELBOW]
             left_wrist = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.LEFT_WRIST]
@@ -71,7 +76,7 @@ class DabMoveDetection:
             else:
                 angle1=0
             
-            # angle2 between left parts points 23,11,13
+            # angle2 between left parts points 23, 11, 13
             left_hip = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.LEFT_HIP]
             
             if results.pose_landmarks is not None:
@@ -79,7 +84,7 @@ class DabMoveDetection:
             else:
                 angle2=0
 
-            # angle3 between left parts points 24,12,14
+            # angle3 between left parts points 24, 12, 14
             right_hip = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.RIGHT_HIP]
             right_elbow = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.RIGHT_ELBOW]
             
@@ -88,7 +93,7 @@ class DabMoveDetection:
             else:
                 angle3=0
 
-            # angle4 between left parts points 24,12,14
+            # angle4 between left parts points 24, 12, 14
             right_wrist = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.RIGHT_WRIST]
             
             if results.pose_landmarks is not None:
@@ -111,11 +116,10 @@ class DabMoveDetection:
                 self.count4 = True
             else:
                 self.count4 = False
-
-            if ((self.c1==False or self.c2==False  or self.c4==False or self.c3==False)):
-                if(self.count1==True and self.count2==True and self.count3==True and self.count4==True):
-                    self.dab_detected = True
             
+            if self.is_dab_correct():
+                self.dab_detected = True
+
             if self.dab_detected:
                 self.dab_detected_label.config(text="Wow, what a DAB !", fg="green")
                 self.master.after(2000, self.quit)
@@ -163,13 +167,13 @@ class DabMoveDetection:
             cv2.destroyAllWindows()
     
 
-    def Bally_Button(self,results):
+    def Bally_Button(self, results):
         if results.pose_landmarks:
             left_hip = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.LEFT_HIP]
             right_hip = results.pose_landmarks.landmark[self.mp_holistic.PoseLandmark.RIGHT_HIP]
             midpoint = ((left_hip.x + right_hip.x) / 2, (left_hip.y + right_hip.y) / 2)
-            distance_from_hip= (abs(midpoint[0]-left_hip.x),abs(midpoint[1] - left_hip.y))
-            bally_button=(midpoint[0]  , (midpoint[1] - distance_from_hip[0])-distance_from_hip[0])
+            distance_from_hip= (abs(midpoint[0]-left_hip.x), abs(midpoint[1] - left_hip.y))
+            bally_button=(midpoint[0], (midpoint[1] - distance_from_hip[0])-distance_from_hip[0])
             return bally_button
         
     
