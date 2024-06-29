@@ -8,26 +8,29 @@ from tkinter import filedialog
 from utils.angle_between_lines import angle_between_lines
 
 class DabMoveDetection:
-    def __init__(self,master,video_path,min_detection_confidence=0.5,min_tracking_confidence=0.5 ):
+    def __init__(self, master, video_path, min_detection_confidence=0.5, min_tracking_confidence=0.5 ):
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_holistic = mp.solutions.holistic
         
         self.master = master
-        self.Dabmove = 0    
         self.count1 = False
         self.count2 = False
         self.count3 = False
         self.count4 = False
-        self.c1,self.c2,self.c3,self.c4=0,0,0,0
+        self.dab_detected = False
+        self.c1, self.c2, self.c3, self.c4 = 0, 0, 0, 0
 
         self.cap = cv2.VideoCapture(video_path)
-        self.holistic = self.mp_holistic.Holistic(min_detection_confidence=min_detection_confidence, min_tracking_confidence=min_tracking_confidence)
+        self.holistic = self.mp_holistic.Holistic(
+            min_detection_confidence=min_detection_confidence, 
+            min_tracking_confidence=min_tracking_confidence
+            )
         
         # title on canvas
         self.master = master
         self.master.title("Please DAB to push your work")
         #  creation of canvas with dimensions 
-        self.canvas = tk.Canvas(self.master, width=640, height=480 , bg="black")
+        self.canvas = tk.Canvas(self.master, width=640, height=480, bg="black")
         self.canvas.pack()
         #  title on left upper corner
         self.button_frame = tk.Frame(self.master)
@@ -35,17 +38,18 @@ class DabMoveDetection:
         # self.button_frame.configure(bg="blue")
         
         #  Add the following line to create a new label to show the leg lift count
-        self.DabMove_count_label = tk.Label(self.master, text=f"DabMove Counts: 0",fg="red", font=("Arial Black", 8,"bold"))
-        self.DabMove_count_label.pack(side=tk.LEFT, anchor=tk.CENTER)
-        self.angle_correction = tk.Label(self.master, text=f"Incorrect DabMove",fg="red", font=("Arial Black", 8,"bold"))
-        self.angle_correction.place(x=130, y=25, anchor='ne') 
+        self.dab_detected_label = tk.Label(self.master, text=f"Incorrect Dab Move", fg="red", font=("Arial Black", 20, "bold"))
+        self.dab_detected_label.place(x=420, y=240, anchor='ne') 
         self.DabMove_image = None
         self.video_running = True
         self.video_detection()
-
           
     
     # function for pose detection ***********************************************************************************************************
+
+    def quit(self):
+        self.running = False
+        self.master.quit()
 
     def detect_pose(self,results):
         if results.pose_landmarks:
@@ -108,22 +112,14 @@ class DabMoveDetection:
             else:
                 self.count4 = False
 
-            if ((self.c1==False or self.c2==False  or self.c4==False or self.c3==False) ):    #  
+            if ((self.c1==False or self.c2==False  or self.c4==False or self.c3==False)):
                 if(self.count1==True and self.count2==True and self.count3==True and self.count4==True):
-                    self.Dabmove = self.Dabmove + 1
-                    self.DabMove_count_label.config(text="DabMove Counts: {}".format(self.Dabmove),fg="blue")
+                    self.dab_detected = True
             
-            if self.Dabmove >= 1:
-                self.running = False
-                self.master.quit()
-                print("===================== Success DAB detected! =====================")
+            if self.dab_detected:
+                self.dab_detected_label.config(text="Wow, what a DAB !", fg="green")
+                self.master.after(2000, self.quit)
                     
-            if(self.count1==True and self.count2==True and self.count3==True and self.count4==True):
-                
-                self.angle_correction.configure(text="DabMove is correcct",fg="green" )
-            else:
-                
-                self.angle_correction.configure(text="Incorrecct DabMove",fg="red" )
             self.c1=self.count1
             self.c2=self.count2
             self.c3=self.count3
