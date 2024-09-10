@@ -25,6 +25,7 @@ FIXUP_SOUND="${SOUNDS_FOLDER}fixup.mp3"
 # Animation variables
 PULL_FRAME_DELAY=0.3  # Delay between frames in seconds
 STASH_FRAME_DELAY=0.05  # Delay between frames in seconds
+AMEND_FRAME_DELAY=0.5
 REPEAT_COUNT=1
 
 case "$1 $2" in
@@ -35,6 +36,9 @@ case "$1 $2" in
     "push dab"*)
         detect_dab
         git push
+        ;;
+    "poulet"*)
+        display_animation "$ANIMATIONS_FOLDER/poulet" $REPEAT_COUNT $PULL_FRAME_DELAY
         ;;
     "poule"*)
         git pull
@@ -47,12 +51,13 @@ case "$1 $2" in
         fi
         wait
         ;;
+    "commit amande"*)
+        display_animation "$ANIMATIONS_FOLDER/angry_cop" $REPEAT_COUNT $AMEND_FRAME_DELAY
+        git commit --amend
+        ;;
     "stache"*)
         display_animation "$ANIMATIONS_FOLDER/moustache" $REPEAT_COUNT $STASH_FRAME_DELAY
         git stash
-        ;;
-    "poulet"*)
-        display_animation "$ANIMATIONS_FOLDER/poulet" $REPEAT_COUNT $PULL_FRAME_DELAY
         ;;
     "autofixup"*)
         git "$@"
