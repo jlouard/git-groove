@@ -1,100 +1,13 @@
 import cv2
 import tkinter as tk
-import mediapipe as mp
-from PIL import Image, ImageTk, ImageSequence
 import warnings
-from utils.angle_between_lines import angle_between_lines
+from PIL import Image, ImageTk
+
+from VideoCapture import VideoCapture
+from PoseAnalyzer import PoseAnalyzer
+from AnimationManager import AnimationManager
 
 warnings.filterwarnings("ignore", category=UserWarning)
-
-class VideoCapture:
-    def __init__(self, video_path, min_detection_confidence=0.5, min_tracking_confidence=0.5):
-        self.cap = cv2.VideoCapture(video_path)
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.mp_pose = mp.solutions.pose
-        self.holistic = mp.solutions.holistic.Holistic(
-            min_detection_confidence=min_detection_confidence,
-            min_tracking_confidence=min_tracking_confidence
-        )
-
-    def read_frame(self):
-        """Capture and process a single frame from the video feed."""
-        ret, frame = self.cap.read()
-        if not ret:
-            return None, None
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        return image, self.holistic.process(image)
-
-    def draw_landmarks(self, image, results):
-        """Draw pose landmarks on the image if detected."""
-        annotated_image = image.copy()
-        if results.pose_landmarks:
-            self.mp_drawing.draw_landmarks(
-                annotated_image,
-                results.pose_landmarks,
-                self.mp_pose.POSE_CONNECTIONS
-            )
-        return annotated_image
-
-    def release(self):
-        self.cap.release()
-        cv2.destroyAllWindows()
-
-
-class PoseAnalyzer:
-    def __init__(self, mp_pose):
-        self.mp_pose = mp_pose
-        
-    def calculate_angles(self, landmarks):
-        left_shoulder = landmarks[self.mp_pose.PoseLandmark.LEFT_SHOULDER]
-        left_elbow = landmarks[self.mp_pose.PoseLandmark.LEFT_ELBOW]
-        left_wrist = landmarks[self.mp_pose.PoseLandmark.LEFT_WRIST]
-        left_hip = landmarks[self.mp_pose.PoseLandmark.LEFT_HIP]
-        right_shoulder = landmarks[self.mp_pose.PoseLandmark.RIGHT_SHOULDER]
-        right_elbow = landmarks[self.mp_pose.PoseLandmark.RIGHT_ELBOW]
-        right_wrist = landmarks[self.mp_pose.PoseLandmark.RIGHT_WRIST]
-        right_hip = landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP]
-
-        angle1 = abs(angle_between_lines(left_shoulder.x, left_shoulder.y, left_elbow.x, left_elbow.y, left_wrist.x, left_wrist.y))
-        angle2 = abs(angle_between_lines(left_hip.x, left_hip.y, left_shoulder.x, left_shoulder.y, left_elbow.x, left_elbow.y))
-        angle3 = abs(angle_between_lines(right_hip.x, right_hip.y, right_shoulder.x, right_shoulder.y, right_elbow.x, right_elbow.y))
-        angle4 = abs(angle_between_lines(right_shoulder.x, right_shoulder.y, right_elbow.x, right_elbow.y, right_wrist.x, right_wrist.y))
-        
-        return [angle1, angle2, angle3, angle4]
-
-    def is_dab_pose(self, landmarks):
-        if not landmarks:
-            return False
-            
-        angles = self.calculate_angles(landmarks)
-        conditions = [
-            0 < angles[0] <= 45,     # Left arm angle
-            60 < angles[1] < 155,    # Left shoulder angle
-            75 < angles[2] < 145,    # Right shoulder angle
-            0 < angles[3] < 30       # Right arm angle
-        ]
-        return all(conditions)
-
-
-class AnimationManager:
-    def __init__(self, canvas, animation_path):
-        self.canvas = canvas
-        self.current_frame = 0
-        self.animation_frames = self._load_animation(animation_path)
-
-    def _load_animation(self, file_path):
-        background_image = Image.open(file_path)
-        return [frame.copy() for frame in ImageSequence.Iterator(background_image)]
-
-    def get_next_frame(self, size=(640, 480)):
-        if not self.animation_frames:
-            return None
-            
-        frame = self.animation_frames[self.current_frame]
-        frame = frame.resize(size, Image.LANCZOS)
-        self.current_frame = (self.current_frame + 1) % len(self.animation_frames)
-        return frame
-
 
 class DabMoveDetection:
     def __init__(self, master, video_path, min_detection_confidence=0.5, min_tracking_confidence=0.5):
