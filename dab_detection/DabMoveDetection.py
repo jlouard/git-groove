@@ -2,6 +2,7 @@ import cv2
 import tkinter as tk
 import warnings
 from PIL import Image, ImageTk
+import os
 
 from VideoCapture import VideoCapture
 from PoseAnalyzer import PoseAnalyzer
@@ -16,7 +17,8 @@ class DabMoveDetection:
         self.pose_analyzer = PoseAnalyzer(self.video_capture.mp_pose)
         
         self.setup_ui()
-        self.animation_manager = AnimationManager(self.canvas, "fireworks.gif")
+        animation_path = os.path.join(os.path.dirname(__file__), "fireworks.gif")
+        self.animation_manager = AnimationManager(self.canvas, animation_path)
         
         self.dab_detected = False
         self.video_running = True

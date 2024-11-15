@@ -31,7 +31,7 @@ REPEAT_COUNT=1
 case "$1 $2" in
     "stash pop"*)
         git "$@"
-        play_sound "$POP_SOUND"
+        play_sound "$POP_SOUND" "$@"
         ;;
     "push dab"*)
         detect_dab
@@ -45,7 +45,7 @@ case "$1 $2" in
         GIT_PULL_STATUS=$?
         if [ $GIT_PULL_STATUS -eq 0 ]; then
             display_animation "$ANIMATIONS_FOLDER/poule" $REPEAT_COUNT $PULL_FRAME_DELAY & 
-            play_sound "$PULL_SOUND" &
+            play_sound "$PULL_SOUND" "$@" &
         else
             display_animation "$ANIMATIONS_FOLDER/poulet" $REPEAT_COUNT $PULL_FRAME_DELAY &
         fi
@@ -53,7 +53,13 @@ case "$1 $2" in
         ;;
     "commit amande"*)
         display_animation "$ANIMATIONS_FOLDER/angry_cop" $REPEAT_COUNT $AMEND_FRAME_DELAY
-        git commit --amend
+        git commit --amend --no-edit
+        for arg in "$@"; do
+            if [ "$arg" = "--exces-de-vitesse" ]; then
+                detect_dab
+                gpf
+            fi
+        done
         ;;
     "stache"*)
         display_animation "$ANIMATIONS_FOLDER/moustache" $REPEAT_COUNT $STASH_FRAME_DELAY
@@ -61,7 +67,7 @@ case "$1 $2" in
         ;;
     "autofixup"*)
         git "$@"
-        play_sound "$FIXUP_SOUND"
+        play_sound "$FIXUP_SOUND" "$@"
         ;;
     *)
         git "$@"
