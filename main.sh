@@ -35,7 +35,10 @@ case "$1 $2" in
         ;;
     "push dab"*)
         detect_dab
-        git push
+        # Extract all arguments after "push dab" and pass them to git push
+        ARGS=("$@")
+        PUSH_ARGS=("${ARGS[@]:2}")  # Skip the first two arguments ("push" and "dab")
+        git push "${PUSH_ARGS[@]}"
         ;;
     "poulet"*)
         display_animation "$ANIMATIONS_FOLDER/poulet" $REPEAT_COUNT $PULL_FRAME_DELAY
